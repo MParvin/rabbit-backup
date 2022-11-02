@@ -3,9 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	tools "github.com/mparvin/rabbit-backup/tools"
 	"github.com/spf13/viper"
-	// impor git from tools directory
-	"github.com/username/rabbit-backup/tools/git"
 )
 
 func DoBackup(cfgFile string) {
@@ -18,9 +17,36 @@ func DoBackup(cfgFile string) {
 	fmt.Println("Using config file:", viper.ConfigFileUsed())
 	fmt.Println("RabbitMQ URL:", viper.GetString("rabbitmq.url"))
 
-	// Create git object
-	git := git.NewGit()
-	git.GitPath = viper.GetString("git.path")
-	git.GitDir = viper.GetString("git.dir")
+	// Delete git dir if exists
+	git := tools.Git{
+		GitPath: viper.GetString("git.path"),
+	}
+	err = tools.DeleteDir(viper.GetString("git.dir"))
+	if err != nil {
+		fmt.Printf("Error deleting git directory, %s", err)
+	}
+
+	// Git clone
+	git.Clone(viper.GetString("git.url"), viper.GetString("git.dir"))
+
+	// Change directory to git dir
+	err = tools.ChangeDir(viper.GetString("git.dir"))
+	if err != nil {
+		fmt.Printf("Error changing directory, %s", err)
+	}
+	// Create backup
+	err = tools.CreateBackup(viper.GetString("rabbitmq.url"), viper.GetString("rabbitmq.user"), viper.GetString("rabbitmq.password"))
+	if err != nil {
+		fmt.Printf("Error creating backup, %s", err)
+	}
+
+	// encrypt backup
+	err = tools.EncryptBackup(viper.GetString("gpg.path"), viper.GetString("gpg.key"))
+	if err != nil {
+		fmt.Printf("Error encrypting backup, %s", err)
+	}
+	// if git status has changes, commit and push
+	// else delete backup
+	// Delete git dir
 
 }

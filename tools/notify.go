@@ -31,7 +31,7 @@ func Send2Telegram(tg_token string, chat_id string, rabbitmq_url string) (string
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return _, fmt.Errorf("bad status: %s", resp.Status)
+		return "", fmt.Errorf("bad status: %s", resp.Status)
 	}
 
 	return "OK", nil

@@ -1,9 +1,5 @@
 package tools
 
-// This part of tools package will download rabbit-backup with curl
-// bash: curl --silent --user "$rabbitUser:$rabbitPass" --header "Content-type: application/json" http://$rabbitAddr/api/definitions | tee $backupFile
-//
-
 import (
 	"fmt"
 	"io"
@@ -11,7 +7,7 @@ import (
 	"os"
 )
 
-func RabbitBackup(rabbitUrl string, rabbitUser string, rabbitPass string) error {
+func CreateBackup(rabbitUrl string, rabbitUser string, rabbitPass string) error {
 	// Create the file
 	out, err := os.Create("backup.json")
 	if err != nil {

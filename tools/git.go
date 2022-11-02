@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"io"
 	"os"
 	"os/exec"
 	"strings"
@@ -117,4 +118,33 @@ func (g *Git) GetRemote() (string, error) {
 		return "", err
 	}
 	return strings.TrimSpace(string(out)), nil
+}
+
+func GitDirExists(dir string) bool {
+	// Check if git directory exists
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
+func GitDirEmpty(dir string) bool {
+	// Check if git directory is empty
+	f, err := os.Open(dir)
+	if err != nil {
+		return false
+	}
+	defer f.Close()
+	_, err = f.Readdir(1)
+	return err == io.EOF
+}
+
+func DeleteDir(dir string) error {
+	// Delete directory
+	return os.RemoveAll(dir)
+}
+
+func ChangeDir(dir string) error {
+	// Change directory
+	return os.Chdir(dir)
 }
