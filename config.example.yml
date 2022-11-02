@@ -1,0 +1,25 @@
+git:
+  repo: 
+    url: "git@github.com:myorg/myrepo.git"
+    branch: "master"
+    path: "myrepo"
+  user:
+    name: "myuser"
+    email: "me@example.com"
+  commit:
+    message: "my commit message"
+
+rabbitmq:
+  url: "http://localhost:5672/"
+  user: "guest"
+  password: "guest"
+
+security:
+  gpg:
+    key: "mykey"
+    passphrase: "mykeypassphrase"
+
+notification:
+  telegram:
+    token: "mytoken"
+    chat_id: "mychatid"
