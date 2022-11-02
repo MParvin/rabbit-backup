@@ -21,20 +21,18 @@ func NewGPG() *GPG {
 	}
 }
 
-func (g *GPG) EncryptBackup(file, recipient string) error {
-	// gpg --encrypt --recipient config.gpg.key config.rabbitmq.backup
+func EncryptBackup(file, recipient string) error {
+	g := NewGPG()
+	// gpg --encrypt --recipient config.gpg.recipient config.backup.file
 	cmd := exec.Command(g.GPGPath, "--encrypt", "--recipient", recipient, file)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	err := cmd.Run()
-	if err != nil {
-		return err
-	}
-	return os.Remove(file)
+	return cmd.Run()
 }
 
 // Decrypt decrypts a file using GPG
-func (g *GPG) DecryptBackup(file, recipient string) error {
+func DecryptBackup(file, recipient string) error {
+	g := NewGPG()
 	// gpg --decrypt --recipient config.gpg.recipient config.backup.file
 	cmd := exec.Command(g.GPGPath, "--decrypt", "--recipient", recipient, file)
 	cmd.Stdout = os.Stdout
